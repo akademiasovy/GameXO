@@ -7,6 +7,7 @@ import javafx.scene.input.MouseEvent;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Random;
 
 public class Controller {
     public ImageView img1;
@@ -79,20 +80,71 @@ public class Controller {
 
     private void processClick(int i)   {
         try {
-            if (state == State.PLAYING) {
+            if (state == State.PLAYING || state==State.GENERATE) {
                 System.out.println("You clicked on " + i);
-                toggle(10);
+                switch(i){
+                    case 1: toggle(2); toggle(5); toggle(6); break;
+                    case 2: toggle(1); toggle(3); toggle(5); toggle(6); toggle(7); break;
+                    case 3: toggle(2); toggle(4); toggle(8); toggle(6); toggle(7); break;
+                    case 4: toggle(3); toggle(7); toggle(8); break;
+                    case 5: toggle(1); toggle(2); toggle(6); toggle(9); toggle(10); break;
+                    case 6: toggle(1); toggle(2); toggle(3); toggle(5); toggle(7); toggle(9); toggle(10); toggle(11);break;
+                    case 7: toggle(2); toggle(3); toggle(4); toggle(6); toggle(8); toggle(10); toggle(11); toggle(12); break;
+                    case 8: toggle(3); toggle(4); toggle(7); toggle(11); toggle(12); break;
+                    case 9: toggle(5); toggle(6); toggle(10); toggle(13); toggle(14); break;
+                    case 10: toggle(5); toggle(6); toggle(7); toggle(9); toggle(11); toggle(13); toggle(14); toggle(15);break;
+                    case 11: toggle(6); toggle(7); toggle(8); toggle(10); toggle(12); toggle(14); toggle(15); toggle(16); break;
+                    case 12: toggle(7); toggle(8); toggle(11); toggle(15); toggle(16); break;
+                    case 13: toggle(9); toggle(10); toggle(14); break;
+                    case 14: toggle(9); toggle(10); toggle(11); toggle(13); toggle(15); break;
+                    case 15: toggle(10); toggle(11); toggle(12); toggle(14); toggle(16); break;
+                    case 16: toggle(11); toggle(12); toggle(15); break;
+                }
+                if(isGameWin() && state==State.PLAYING){
+                    state=State.END;
+                }
             }
         }catch(Exception e){
             e.printStackTrace();
         }
     }
 
+    private boolean isGameWin() {
+        int i,j,p=0;
+        for(i=0;i<4;i++)
+            for(j=0;j<4;j++)
+                if(field[i][j])
+                   p++;
+
+        if(p==16 || p==0)
+            return true;
+        else
+            return false;
+    }
+
     public void btnNewClick(ActionEvent actionEvent) {
-        state=State.PLAYING;
+
+
         for(int i=0;i<4;i++)
             for(int j=0;j<4;j++)
-                field[i][j]=false;
+                 field[i][j]=false;
+
+        generateField();
+
+    }
+
+    private void generateField() {
+        int i;
+        state=State.GENERATE;
+        try {
+            Random random = new Random();
+            for (i = 0; i < 1; i++) {
+                processClick(random.nextInt(16) + 1);
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     public void toggle(int i) throws Exception{
@@ -100,15 +152,32 @@ public class Controller {
         int row=(i-1)/4;
         field[row][col] = !field[row][col];
         Image image;
-        System.out.println(img10.getImage().getUrl());
+        //System.out.println(img10.getImage().getUrl());
         String current = new java.io.File( "." ).getCanonicalPath();
-    
+
         if(field[row][col]==false){
              image=new Image(new FileInputStream( current+"\\src\\resource\\obr1.png"));
         }
         else{
              image=new Image(new FileInputStream(current+"\\src\\resource\\obr2.png"));
         }
-        img10.setImage(image);
+        switch(i) {
+            case 1:   img1.setImage(image); break;
+            case 2:   img2.setImage(image); break;
+            case 3:   img3.setImage(image); break;
+            case 4:   img4.setImage(image); break;
+            case 5:   img5.setImage(image); break;
+            case 6:   img6.setImage(image); break;
+            case 7:   img7.setImage(image); break;
+            case 8:   img8.setImage(image); break;
+            case 9:   img9.setImage(image); break;
+            case 10:   img10.setImage(image); break;
+            case 11:   img11.setImage(image); break;
+            case 12:   img12.setImage(image); break;
+            case 13:   img13.setImage(image); break;
+            case 14:   img14.setImage(image); break;
+            case 15:   img15.setImage(image); break;
+            case 16:   img16.setImage(image); break;
+        }
     }
 }
