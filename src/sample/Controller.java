@@ -1,6 +1,8 @@
 package sample;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -81,7 +83,7 @@ public class Controller {
     private void processClick(int i)   {
         try {
             if (state == State.PLAYING || state==State.GENERATE) {
-                System.out.println("You clicked on " + i);
+                //System.out.println("You clicked on " + i);
                 switch(i){
                     case 1: toggle(2); toggle(5); toggle(6); break;
                     case 2: toggle(1); toggle(3); toggle(5); toggle(6); toggle(7); break;
@@ -102,6 +104,12 @@ public class Controller {
                 }
                 if(isGameWin() && state==State.PLAYING){
                     state=State.END;
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Win");
+                    alert.setHeaderText("Congratulation !");
+                    alert.setContentText("You are winner!");
+                    alert.showAndWait();
                 }
             }
         }catch(Exception e){
@@ -124,7 +132,8 @@ public class Controller {
 
     public void btnNewClick(ActionEvent actionEvent) {
 
-
+        if(state!=State.NEW)
+            return;
         for(int i=0;i<4;i++)
             for(int j=0;j<4;j++)
                  field[i][j]=false;
@@ -138,10 +147,10 @@ public class Controller {
         state=State.GENERATE;
         try {
             Random random = new Random();
-            for (i = 0; i < 1; i++) {
+            for (i = 0; i < 19; i++) {
                 processClick(random.nextInt(16) + 1);
             }
-
+            state=State.PLAYING;
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -179,5 +188,10 @@ public class Controller {
             case 15:   img15.setImage(image); break;
             case 16:   img16.setImage(image); break;
         }
+    }
+
+    public void btnExitClick(ActionEvent actionEvent) {
+        Platform.exit();
+        System.exit(1);
     }
 }
